@@ -8,7 +8,6 @@ Listed below are the constraints in the Game Telemetry Database
 | ------------------- | -------------------------- | ------------------------------------------------------- |
 | player_id           | PK, Auto-increment         |                                                         |
 | username            | NOT NULL, UNIQUE           |                                                         |
-| character             | NOT NULL|
 | email               | NOT NULL, UNIQUE           |                                                         |
 | region              | NOT NULL                   |                                                         |
 | platform            | NOT NULL                   |                                                         |
@@ -34,6 +33,7 @@ Listed below are the constraints in the Game Telemetry Database
 | match_id              | FK, ON DELETE CASCADE           | Matches do not need to be retained forever, if 1 is deleted, delete corresponding match participants                                                       |
 | player_id             | FK, ON DELETE RESTRICT          | Players should never be deleted, only status mvoed to inactive. This is a safety to avoid deletion                                                        |
 | team_id               | NOT NULL           |                                                         |
+| character             | NOT NULL|
 | joined_at             | NOT NULL DEFAULT NOW            |                 |
 | left_at               | NULL                            | Will be null until either end of game or participant quits                         |
 | kills                 | NOT NULL, DEFAULT 0

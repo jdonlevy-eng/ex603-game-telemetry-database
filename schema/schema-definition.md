@@ -8,7 +8,6 @@ Listed below are the relations in the Game Telemetry Database
 
 - player_id: integer
 - username: string
-- character: string
 - email: string
 - region: string
 - platform: string
@@ -38,6 +37,7 @@ Listed below are the relations in the Game Telemetry Database
 - match_id: integer
 - player_id: integer
 - team_id: integer
+- character: string
 - joined_at: datetime
 - left_at: datetime
 - kills: integer
