@@ -1,0 +1,61 @@
+erDiagram
+    players {
+        int player_id PK
+        string username
+        string email
+        string character
+        string region
+        string platform
+        string status
+        datetime created_at
+    }
+
+    matches {
+        int match_id PK
+        string map_name
+        string server_region
+        datetime started_at
+        datetime ended_at
+        string match_status
+    }
+
+    match_participants {
+        int match_participant_id PK
+        int match_id FK
+        int player_id FK
+        int team_id
+        datetime joined_at
+        datetime left_at
+        int kills
+        int deaths
+        int assists
+        string result
+    }
+
+    game_modes {
+        int game_mode_id PK
+        string name
+        string description
+        int max_players
+        int min_players
+    }
+
+    match_modes {
+        int match_id "PK, FK"
+        int game_mode_id "PK, FK"
+    }
+
+    score {
+        int score_id PK
+        int match_participant_id FK
+        string score_type
+        string weapon
+        int points
+        datetime recorded_at
+    }
+
+    players ||--o{ match_participants : "plays in"
+    matches ||--o{ match_participants : "has"
+    matches ||--o{ match_modes : "has"
+    game_modes ||--o{ match_modes : "applied to"
+    match_participants ||--o{ score : "earns"
