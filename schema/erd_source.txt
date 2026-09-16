@@ -3,7 +3,6 @@ erDiagram
         int player_id PK
         string username
         string email
-        string character
         string region
         string platform
         string status
@@ -24,6 +23,7 @@ erDiagram
         int match_id FK
         int player_id FK
         int team_id
+        string character
         datetime joined_at
         datetime left_at
         int kills
