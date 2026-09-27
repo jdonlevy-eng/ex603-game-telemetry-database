@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS game_modes   CASCADE;
 DROP TABLE IF EXISTS players    CASCADE;
 
 -- ----------------------------------------------------------------
--- 1. players — first, because it references no other table.
+-- 1. players — first, because it references no other table besides itself.
 --  The order of the first 3 tables could be interchanged without consequence.
 -- ----------------------------------------------------------------
 
@@ -26,12 +26,16 @@ CREATE TABLE players (
 	platform VARCHAR(11) NOT NULL,
 	status VARCHAR(8) NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    referrer_id INTEGER NULL,
 	CONSTRAINT chk_region_values
 	CHECK (region in ('NA','LATAM','EU','MENA','AF','SA','SEA','EA','OCE')),
 	CONSTRAINT chk_platform_values
 	CHECK (platform in ('Xbox','Playstation','PC','Mobile')),
 	CONSTRAINT chk_status_values
-	CHECK (status in ('active','banned','inactive'))
+	CHECK (status in ('active','banned','inactive')),
+    CONSTRAINT fk_referrer_id
+    FOREIGN KEY (referrer_id) REFERENCES players(player_id)
+    ON DELETE SET NULL
 );
 
 -- ----------------------------------------------------------------
@@ -73,9 +77,9 @@ CREATE TABLE game_modes(
 	CONSTRAINT chk_name_values
 	CHECK (name in ('TEAM_DEATHMATCH','CAPTURE_THE_FLAG','SEARCH_AND_DESTROY','DOMINATION')),
 	CONSTRAINT chk_max_players_between
-	CHECK (max_players > 2 AND max_players < 20),
+	CHECK (max_players >= 2 AND max_players <= 20),
 	CONSTRAINT chk_min_players_between
-	CHECK (min_players > 2 AND min_players < 20)	
+	CHECK (min_players >= 2 AND min_players <= 20)	
 );
 
 -- ----------------------------------------------------------------
@@ -165,5 +169,5 @@ CREATE TABLE scores(
 'Team Elimination', 'Match Victory')),
 	CONSTRAINT chk_points_pos
 	CHECK (points > 0)	
-)
+);
 
