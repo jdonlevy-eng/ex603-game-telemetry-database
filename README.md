@@ -23,14 +23,13 @@ The database is defined in [schema/schema.sql](schema/schema.sql) and targets Po
 
 | Table | What it holds | Key |
 |---|---|---|
-| `players` | One row per player account: username, email, region, platform, account status and an optional referrer. | `player_id` (identity) |
-| `matches` | One row per match: map, server region, start/end times, a derived duration and the match's lifecycle status. | `match_id` (identity) |
-| `game_modes` | The catalogue of game modes (Team Deathmatch, Capture the Flag, Search and Destroy, Domination) with player limits. | `game_mode_id` (identity) |
-| `match_participants` | One row per player per match: team, character, join/leave times, kills, assists, deaths and result. Resolves the many-to-many between `players` and `matches`. | `match_participant_id` (identity) |
+| `players` | One row per player account: username, email, region, platform, account status and an optional referrer. | `player_id` |
+| `matches` | One row per match: map, server region, start/end times, a derived duration and the match's lifecycle status. | `match_id` |
+| `game_modes` | Gameplay modes (Team Deathmatch, Capture the Flag, Search and Destroy, Domination) with player limits. | `game_mode_id` |
+| `match_participants` | One row per player per match: team, character, join/leave times, kills, assists, deaths and result. Resolves the many-to-many between `players` and `matches`. | `match_participant_id` |
 | `match_modes` | Links matches to the game modes they were played under. Resolves the many-to-many between `matches` and `game_modes`. | `(match_id, game_mode_id)` |
-| `scores` | Individual scoring events earned by a participant (kill, headshot, flag capture, …), with the weapon used and points awarded. | `score_id` (identity) |
+| `scores` | Individual scoring events earned by a participant (kill, headshot, flag capture, …), with the weapon used and points awarded. | `score_id`  |
 
-Tables are created in dependency order: `players`, `matches` and `game_modes` reference no other table, so they come first, then the junction tables, then `scores`.
 
 ### Design decisions worth noticing
 
