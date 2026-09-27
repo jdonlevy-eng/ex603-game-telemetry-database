@@ -45,7 +45,7 @@ erDiagram
         int game_mode_id "PK, FK"
     }
 
-    score {
+    scores {
         int score_id PK
         int match_participant_id FK
         string score_type
