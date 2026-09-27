@@ -22,7 +22,7 @@ erDiagram
         int match_participant_id PK
         int match_id FK
         int player_id FK
-        int team_id
+        int team_name
         string character
         datetime joined_at
         datetime left_at
