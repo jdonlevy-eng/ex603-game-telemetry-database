@@ -9,8 +9,9 @@ WHERE disconnect_reason <> 'Network timeout'
 
 -- This query shows the counts of disconnect reasons
 -- Here you can see that the previous query counted only
--- the Client crash, Network timeout, and server restart
--- silently omitting null counts. As you can see in this
+-- the Client crash, Network timeout, and server restart (22)
+-- silently omitting null counts (166). The previous query should
+-- have reported 188. As you can see in this
 -- query the totals combine to 200 rows
 SELECT
 	disconnect_reason,
@@ -53,9 +54,3 @@ SELECT
 	PlayTime
 FROM match_participants_play_time
 WHERE PlayTime > 5
-
-
-	
-
-
-
