@@ -1,6 +1,7 @@
 -- Task 4.2 Build the breakdown leadership asked for
 
--- Part A Compute total number of participants, and failure counts by match
+-- Part A Compute total number of participants, total failures, and failure
+-- counts by type for each match
 -- Excluding player quit disconnect_reason as it does not represent a failure
 -- Including unique counts to eliminate scenario where a single player has
 -- serveral failures in 1 match
@@ -8,6 +9,7 @@ SELECT
 	match_id,
 	COUNT(*) AS MATCH_PARTICIPANT_COUNT,
 	COUNT(DISTINCT player_id) AS UNIQUE_PARTICIPANT_COUNT,
+	COUNT(CASE WHEN disconnect_reason IN ('Network timeout', 'Server restart', 'Client crash') THEN 1 END) AS TOTAL_FAILURE_COUNT,
 	COUNT(CASE WHEN disconnect_reason = 'Network timeout' THEN 1 END) AS NETWORK_TIMEOUT_CRASH_COUNT,
 	COUNT(DISTINCT CASE WHEN disconnect_reason = 'Network timeout' THEN player_id END) AS UNIQUE_NETWORK_TIMEOUT_CRASH_COUNT,
 	COUNT(CASE WHEN disconnect_reason = 'Server restart' THEN 1 END) AS SERVER_RESTART_CRASH_COUNT,
@@ -23,12 +25,10 @@ ORDER BY
 	UNIQUE_PARTICIPANT_COUNT DESC;
 
 -- Part B Subtotals and a grand total of 
--- abandoned participants by server and client regions
+-- failures by server region (no detail rows)
 SELECT
 	CASE WHEN GROUPING(server_region) = 1 THEN 'All server regions'
 		ELSE m.server_region END,
-	CASE WHEN GROUPING(client_region) = 1 THEN 'All client regions'
-		ELSE mp.client_region END,
 	COUNT(*) AS MATCH_PARTICIPANT_COUNT,
 	COUNT(CASE WHEN disconnect_reason = 'Network timeout' THEN 1 END) AS NETWORK_TIMEOUT_CRASH_COUNT,
 	COUNT(CASE WHEN disconnect_reason = 'Server restart' THEN 1 END) AS SERVER_RESTART_CRASH_COUNT,
@@ -36,13 +36,13 @@ SELECT
 FROM match_participants mp
 JOIN matches m
 	ON m.match_id = mp.match_id
-GROUP BY ROLLUP(m.server_region,mp.client_region)
+GROUP BY ROLLUP(m.server_region)
 ORDER BY 
 	NETWORK_TIMEOUT_CRASH_COUNT DESC,
 	SERVER_RESTART_CRASH_COUNT DESC,
 	CLIENT_CRASH_COUNT DESC;
 
--- Part C Baseline for High Volume (greater than 15) producers
+-- Part C Baseline for High Volume (15 or more participants) producers
 
 WITH match_data AS(
 	SELECT

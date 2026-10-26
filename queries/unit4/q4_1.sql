@@ -5,9 +5,9 @@
 -- Minimum score
 -- Maximum score
 -- Unique Player count
--- Filtering out abandoned player matches to remove 0 scores from poluting stats
--- This is a data quality issue, also notice that all 0 scores are abandoned
--- matches with no left_at timestamp
+-- Note the minimum score is 0. Abandoned participants are recorded with a
+-- score of 0, which drags the average down. This is a data quality issue,
+-- investigated in the next query
 
 SELECT
 	COUNT(*) AS MATCH_PARTICIPANT_COUNT,
