@@ -6,7 +6,7 @@ The dashboard said roughly half of all matches failed. The actual figure is far 
 
 ## How it varies across matches
 
-Failures are not spread evenly. Among the eight matches with 15 or more participants, where the numbers are large enough to trust, the typical failure rate is about **12%**. Two of those matches run at roughly double that (2 and 11), and two had no failures at all (8 and 10). Match 9, with 14 participants, falls just below this cutoff but has the highest failure rate on the platform.
+Failures are not spread evenly across matches. Among the eight matches with 15 or more participants, where the numbers are large enough to trust, the typical failure rate is about **12%**. Two of those matches run at roughly double that (2 and 11), and two had no failures at all (8 and 10). Match 9, with 14 participants, falls just below this cutoff but has the highest failure rate on the platform.
 
 ## The matches I would investigate
 
