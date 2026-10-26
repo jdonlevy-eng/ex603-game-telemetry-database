@@ -39,3 +39,27 @@ The database is defined in [schema/schema.sql](schema/schema.sql) and targets Po
 - **`match_modes` is a weak entity.** It has no attributes of its own. Its identity is the composite key of its two owners, and it cascades away if either the match or the game mode is deleted.
 - **Scores are a separate table rather than a list on the participant.** A participant can earn many scoring events of the same type in one match, so `scores` resolves what would otherwise be a multivalued attribute and uses its own surrogate key.
 - **`duration` is derived, not entered.** `matches.duration` is `GENERATED ALWAYS AS (ended_at - started_at) STORED`. It is computed once when the match ends and read often by analysis queries, so it is stored rather than recalculated. Because it can't be written directly, it can never disagree with the timestamps.
+
+## Query catalogue
+
+All queries run against the `ex603_data` database in PostgreSQL 18.
+
+### Unit 3
+
+| File | Business question |
+|---|---|
+| [q3_1.sql](queries/unit3/q3_1.sql) | What do recent ranked matches, participation statuses and short sessions look like, and is there anything unexpected in the data? |
+| [q3_2.sql](queries/unit3/q3_2.sql) | Which rows did the dashboard's failure calculation silently drop because `disconnect_reason` is NULL? |
+| [q3_3.sql](queries/unit3/q3_3.sql) | How many participant records have a network timeout, and which matches and players were involved? |
+
+### Unit 4
+
+| File | Query | Business question |
+|---|---|---|
+| [q4_1.sql](queries/unit4/q4_1.sql) | 4.1.1 | What are the count, total, average, minimum and maximum scores across all participation records, and how many distinct players are there? |
+| | 4.1.2 | How many participants, what average score and how many abandoned players does each match have? |
+| | 4.1.3 | Which matches have enough participants (15 or more) for their numbers to be meaningful? |
+| | 4.1.4 | How do participation, score and abandonment vary across each combination of server region and client region? |
+| [q4_2.sql](queries/unit4/q4_2.sql) | Part A | For each match, how many participants were there, and how many experienced a failure (in total and by type)? |
+| | Part B | What are the failure subtotals for each server region, and the platform-wide grand total? |
+| | Part C | What is the baseline failure rate and average score for high-volume matches? |
