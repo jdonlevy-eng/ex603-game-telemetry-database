@@ -57,9 +57,9 @@ All queries run against the `ex603_data` database in PostgreSQL 18.
 | File | Query | Business question |
 |---|---|---|
 | [q4_1.sql](queries/unit4/q4_1.sql) | 4.1.1 | What are the count, total, average, minimum and maximum scores across all participation records, and how many distinct players are there? |
-| | 4.1.2 | How many participants, what average score and how many abandoned players does each match have? |
-| | 4.1.3 | Which matches have enough participants (15 or more) for their numbers to be meaningful? |
-| | 4.1.4 | How do participation, score and abandonment vary across each combination of server region and client region? |
+| [q4_1.sql](queries/unit4/q4_1.sql) | 4.1.2 | How many participants, what average score and how many abandoned players does each match have? |
+| [q4_1.sql](queries/unit4/q4_1.sql) | 4.1.3 | Which matches have enough participants (15 or more) for their numbers to be meaningful? |
+| [q4_1.sql](queries/unit4/q4_1.sql) | 4.1.4 | How do participation, score and abandonment vary across each combination of server region and client region? |
 | [q4_2.sql](queries/unit4/q4_2.sql) | Part A | For each match, how many participants were there, and how many experienced a failure (in total and by type)? |
-| | Part B | What are the failure subtotals for each server region, and the platform-wide grand total? |
-| | Part C | What is the baseline failure rate and average score for high-volume matches? |
+| [q4_2.sql](queries/unit4/q4_2.sql) | Part B | What are the failure subtotals for each server region, and the platform-wide grand total? |
+| [q4_2.sql](queries/unit4/q4_2.sql) | Part C | What is the baseline failure rate and average score for high-volume matches? |
