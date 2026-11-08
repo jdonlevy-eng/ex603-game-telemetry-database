@@ -32,7 +32,7 @@ Both queries return matches 14 and 15. NOT EXISTS filters rows of matches and ca
 
 EXCEPT and NOT EXISTS are two approaches for finding matches with no match_participants, both can be found in Part C of unit5/q5_2.sql. Although they identified the same matches, they have several differences. First, and most obvious from the queries, NOT EXISTS lets you select any column available in the outer table. This can be useful when exploring trends, in our example we included server_region, is_ranked and match_code to see whether there was any meaningful connection. This is not possible with EXCEPT, since it is a set difference operator: both SELECT lists must have the same number of columns with compatible types, so any extra column would also have to exist in match_participants. A less obvious difference, which is not well represented in our example, is how duplicates are handled. NOT EXISTS returns every qualifying row from the outer table, duplicates included, while EXCEPT always returns distinct rows, again because it is a set operator. In general, EXCEPT is good for quick checks on key columns that will likely need further queries to dig deeper, whereas NOT EXISTS can answer the question in a single, more complete query that explains where data may be missing.
 
-## Write Up
+### Write Up
 
 1. Which producers were excluded by the inner join?
     * Matches 14 and 15 were missing from the inner join but present in the other joins (see Part A).
@@ -44,3 +44,46 @@ EXCEPT and NOT EXISTS are two approaches for finding matches with no match_parti
     * Matches that never start are a different problem from ones that start and fail. It may point to a matchmaking or setup fault. Reports that show the failure rate of players dropping out during a game would not include this scenario, since a match with no players cannot have a failure rate.
 5. What action could leadership take based on these findings?
     * Leadership could ask the server teams to investigate matchmaking logs and server logs for matches 14 and 15 to determine why they never started. Additionally, they might be able to explain the mismatch between the player_count claimed by the matches table and the participations actually recorded.
+
+
+# Task 5.3: Understand Join Performance and Execution Plans
+
+### Part A: Explore CROSS JOIN
+
+A CROSS JOIN pairs every row of one table with every row of the other, so the number of rows in the result is the product of the two source tables' row counts. The count query in Part A of unit5/q5_3.sql shows this: match_platforms has 28 rows and game_modes has 5, and the CROSS JOIN returns 28 × 5 = 140 rows.
+
+This is useful when trying to find all possible combinations of values from two tables (see Write Up Q1 for an example on our platform). It must be used carefully though, since the result grows much faster than the input tables. A missing join condition, or a missing filter on a source table, can produce an unintended Cartesian product: a long-running query whose result is too large to be useful. An unexpectedly large row count is often the first sign of this kind of query error.
+
+### Part B: Examine a Query Execution Plan
+
+    "QUERY PLAN"
+    "Sort  (cost=17.68..17.69 rows=5 width=483)"
+    "  Sort Key: m.match_id, mp.joined_at"
+    "  ->  Nested Loop  (cost=0.30..17.62 rows=5 width=483)"
+    "        ->  Nested Loop  (cost=0.15..15.61 rows=5 width=228)"
+    "              ->  Seq Scan on match_participants mp  (cost=0.00..5.00 rows=200 width=50)"
+    "              ->  Memoize  (cost=0.15..0.42 rows=1 width=182)"
+    "                    Cache Key: mp.match_id"
+    "                    Cache Mode: logical"
+    "                    ->  Index Scan using matches_pkey on matches m  (cost=0.14..0.41 rows=1 width=182)"
+    "                          Index Cond: ((match_id = mp.match_id) AND (match_id = ANY ('{2,11,9}'::integer[])))"
+    "        ->  Index Scan using players_pkey on players p  (cost=0.14..0.40 rows=1 width=262)"
+    "              Index Cond: (player_id = mp.player_id)"
+
+Using EXPLAIN on the three-table join from Task 5.1 (query 1 in unit5/q5_1.sql) captures the full execution plan created by the PostgreSQL planner, shown above. In our case, the planner chose a **Nested Loop** join algorithm for both joins, indicated by the two `-> Nested Loop` lines in the output. This is because all of the tables involved are small (match_participants 200 rows, matches 15, players 30) and because matches.match_id and players.player_id are primary keys, which PostgreSQL indexes automatically. This can be seen in the plan as `Index Scan using matches_pkey` and `Index Scan using players_pkey`.
+
+As the database grows, the part of the query most likely to slow down is the `Seq Scan on match_participants`. Its join columns (match_id and player_id) are not indexed, so the whole table is read every time the query runs, no matter how few matches are requested, while the other two tables are reached through index lookups. Since each match has many match_participants, this table will grow much faster than the others, making the sequential scan longer. At this size a nested loop is cheap, but as match_participants grows the planner is likely to switch to a hash join. Adding an index on match_participants.match_id would let it keep using fast index lookups instead.
+
+### Write Up
+
+1. Give an example of when a Cartesian product could be useful on your platform, or explain why you would not need one.
+    * A Cartesian product is useful when trying to identify all possible combinations of values from two tables. An example on our platform would be every platform and game mode combination. Because match_platforms has one row per match and platform, the 140 rows from our CROSS JOIN contain only 25 distinct platform and game mode pairs, each repeated, selecting DISTINCT platform_code before the CROSS JOIN would give the clean list of 25. This could show which platform and game mode combinations have been used in production, and possibly where to test the ones that have not.
+2. Which join algorithms did PostgreSQL choose for your query?
+    * PostgreSQL chose the **Nested Loop** join algorithm for both joins in the three-table join from Task 5.1 (see Part B).
+3. What information in the execution plan helps explain those choices?
+    * The execution plan showed `Index Scan using matches_pkey` and `Index Scan using players_pkey`, which shows matches.match_id and players.player_id are indexed (as primary keys, they are indexed automatically). The first join's outer input is the full match_participants table (`Seq Scan`, `rows=200`), but the `Memoize` step means matches_pkey is only searched once per distinct match. The second join's outer input is estimated at only 5 rows (`rows=5`). A small outer input combined with an index on the inner table is a natural candidate for a **Nested Loop** join.
+4. Why is it useful to understand the selected join algorithms?
+    * It is useful to understand the join algorithm for queries that are expected to run often, such as statistics shown on a landing page, to better predict how the query's performance will be affected as the database scales. For example, if EXPLAIN showed a query using a hash join, there could be a valid concern that as data grows the hash table might exceed the memory set for it, forcing PostgreSQL to spill batches to disk, which drastically slows performance. In that case the query may need to be rewritten, or indexes added to certain columns.
+5. What changes to the data or database might make another join algorithm more appropriate?
+    * As match_participants grows, the planner is likely to move from a **Nested Loop** to a **Hash Join**. Our plan already reads the whole table with a `Seq Scan`, and once it is large, building a hash table in one pass becomes cheaper than looping over it. If both join columns were indexed, or the results needed to be sorted on the join key, a **Merge Join** could become the better option. Conversely, adding an index on match_participants.match_id could keep the planner on a **Nested Loop** with fast index lookups even at a much larger size, since it could then start from the 3 requested matches instead of scanning every participation.
+
