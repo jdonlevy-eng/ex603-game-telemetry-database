@@ -63,3 +63,28 @@ All queries run against the `ex603_data` database in PostgreSQL 18.
 | [q4_2.sql](queries/unit4/q4_2.sql) | Part A | For each match, how many participants were there, and how many experienced a failure (in total and by type)? |
 | [q4_2.sql](queries/unit4/q4_2.sql) | Part B | What are the failure subtotals for each server region, and the platform-wide grand total? |
 | [q4_2.sql](queries/unit4/q4_2.sql) | Part C | What is the baseline failure rate and average score for high-volume matches? |
+
+### Unit 5
+
+| File | Query | Business question |
+|---|---|---|
+| [q5_1.sql](queries/unit5/q5_1.sql) | 5.1 Q1 | For the matches flagged in Assignment 4, who played, when did they join and leave, how did each session end, and were they connecting from another region? |
+| [q5_1.sql](queries/unit5/q5_1.sql) | 5.1 Q2 | Which matches offer each game mode, and do the flagged matches share any modes? |
+| [q5_1.sql](queries/unit5/q5_1.sql) | 5.1 Q3 | How do the flagged matches compare with other matches in the same server region? |
+| [q5_2.sql](queries/unit5/q5_2.sql) | Part A | How many players does each match record compared with its stated player count, and how many matches does an INNER JOIN exclude compared with a LEFT JOIN? |
+| [q5_2.sql](queries/unit5/q5_2.sql) | Part B | Does a RIGHT JOIN return exactly the same records as the LEFT JOIN, and does a FULL OUTER JOIN reveal any participations with no match? |
+| [q5_2.sql](queries/unit5/q5_2.sql) | Part C | Which matches have never had a participant (NOT EXISTS vs EXCEPT)? |
+| [q5_3.sql](queries/unit5/q5_3.sql) | Part A | Does a CROSS JOIN of match platforms and game modes return the product of the two tables' row counts? |
+| [q5_3.sql](queries/unit5/q5_3.sql) | Part B | How does PostgreSQL plan to execute the three-table join from Task 5.1? |
+
+## Analysis and findings
+
+| Unit | Write-up | Findings memo |
+|---|---|---|
+| 1 | [unit1.md](analysis/unit1.md) | |
+| 2 | [unit2.md](analysis/unit2.md) | |
+| 3 | | [unit3-finding.md](analysis/unit3-finding.md) |
+| 4 | [unit4.md](analysis/unit4.md) | [unit4-finding.md](analysis/unit4-finding.md) |
+| 5 | [unit5.md](analysis/unit5.md) | [unit5-finding.md](analysis/unit5-finding.md) |
+
+Query and result screenshots for each unit are in [screenshots/](screenshots/).
