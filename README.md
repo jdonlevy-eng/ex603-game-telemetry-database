@@ -171,8 +171,6 @@ Additionally there are only 200 sessions, a relatively small data set. A single 
 
 ## Video Presentation
 [https://github.com/user-attachments/assets/1f747046-ca7c-44f4-bfe7-e22cb49ee357]
-<!-- TODO: add video link -->
-*Video coming soon.*
 
 ## How to Run It
 
