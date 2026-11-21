@@ -1,10 +1,6 @@
--- 4.1.1 Find the following stats in MATCH_PARTICIPANTS
--- Match Pariticpants count
--- Sum of Scores
--- Average score
--- Minimum score
--- Maximum score
--- Unique Player count
+-- 4.1.1
+-- Question: What are the count, total, average, minimum and maximum score
+-- across all sessions, and how many distinct players appear?
 -- Note the minimum score is 0. Abandoned participants are recorded with a
 -- score of 0, which drags the average down. This is a data quality issue,
 -- investigated in the next query
@@ -24,7 +20,9 @@ FROM match_participants;
 
 SELECT * FROM match_participants where score = 0;
 
--- 4.1.2 Find match_participants and average score for each match
+-- 4.1.2
+-- Question: How many sessions and what average score does each match have,
+-- from busiest to quietest?
 -- As you can see a few matches have lower average scores then most
 -- (3,9,11) likely due to their higher number of abandonded players
 
@@ -37,7 +35,10 @@ FROM match_participants
 GROUP BY match_id
 ORDER BY NUMBER_OF_PLAYERS DESC;
 
--- 4.1.3 To avoid low player count matches from throwing off error rate
+-- 4.1.3
+-- Question: Which matches have enough sessions (15 or more) for their
+-- failure rate to mean anything?
+-- To avoid low player count matches from throwing off error rate
 -- we will only choose matches with 15 or more players since this is
 -- just below the median.
 
@@ -51,7 +52,10 @@ GROUP BY match_id
 HAVING COUNT(*) >= 15
 ORDER BY NUMBER_OF_PLAYERS DESC;
 
--- 4.1.4 The picture changes when comparing number
+-- 4.1.4
+-- Question: How do sessions, score and abandonment vary across each
+-- combination of server region and the player's connecting region?
+-- The picture changes when comparing number
 -- of abandoned players across client_region and server_region
 -- where APAC, SA has more abandoned players then any other combination
 

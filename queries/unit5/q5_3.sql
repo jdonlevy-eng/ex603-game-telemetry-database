@@ -1,6 +1,8 @@
 -- Task 5.3 Understand Join Performance and Execution Plans
 
 -- Part A: Explore CROSS JOIN
+-- Question: Does pairing every match platform with every game mode return
+-- the product of the two tables' row counts?
 
 -- 1. Every match platform paired with every game mode (Cartesian product)
 
@@ -22,7 +24,8 @@ SELECT
 
 -- Part B: Examine a Query Execution Plan
 
--- How does PostgreSQL plan to execute the three-table join from Task 5.1 (q5_1.sql query 1)?
+-- Question: How does PostgreSQL plan to execute the three-table incident join
+-- from Task 5.1 (q5_1.sql Q1), and what might change as the platform grows?
 
 EXPLAIN
 	SELECT 

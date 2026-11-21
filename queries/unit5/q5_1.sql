@@ -1,6 +1,7 @@
 -- Task 5.1: Connect Producers to Their Data
 
--- Q1. Incident view for the matches flagged in Assignment 4: who played each match, when, and how their session ended.
+-- Q1. Who played on the matches flagged in Unit 4, when did they join and
+-- leave, how did each session end, and were they connecting from another region?
 
 SELECT 
 	m.match_id,
@@ -18,7 +19,8 @@ JOIN players p ON mp.player_id = p.player_id
 WHERE m.match_id IN (2,11,9)
 ORDER BY m.match_id, mp.joined_at;
 
--- Q2. Do the flagged matches in Assignment 4 share game modes?
+-- Q2. Which game modes does each match offer, and do the flagged matches
+-- share any?
 
 SELECT
 	gm.mode_name,
@@ -32,8 +34,8 @@ JOIN game_modes gm  ON gm.mode_id  = mm.mode_id
 GROUP BY gm.mode_id, gm.mode_name
 ORDER BY gm.mode_id;
 
--- Q3. How do the flagged matches compare to other matches in the same 
--- server region
+-- Q3. How do the flagged matches compare with other matches in the same
+-- server region?
 
 SELECT
 	flagged.match_id      AS flagged_match,

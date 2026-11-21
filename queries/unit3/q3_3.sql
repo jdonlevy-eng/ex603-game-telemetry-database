@@ -1,7 +1,6 @@
 --3.3
 
--- The question: How many participant records 
--- have a network timeout disconnect reason, 
+-- Question: How many sessions ended in a network timeout,
 -- and which matches and players were involved?
 
 -- 1. Using a subquery with IN/NOT IN

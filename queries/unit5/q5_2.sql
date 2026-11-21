@@ -1,6 +1,8 @@
 -- Task 5.2: Find Records That Joins May Exclude
 
 -- Part A: Compare INNER JOIN and LEFT JOIN
+-- Question: Which matches does an INNER JOIN leave out that a LEFT JOIN keeps,
+-- and does each match's recorded player count agree with its sessions?
 
 -- 1. Use left join to identify, for each match,
 -- the number of players according to match_participants
@@ -41,6 +43,8 @@ LEFT JOIN match_participants mp on m.match_id = mp.match_id;
 
 
 -- Part B: Explore RIGHT JOIN and FULL OUTER JOIN
+-- Question: Does a RIGHT JOIN return the same records as the LEFT JOIN, and
+-- does a FULL OUTER JOIN find any sessions with no match?
 
 -- 1. RIGHT JOIN achieving the same result as the LEFT JOIN in Part A.1
 
@@ -88,6 +92,7 @@ GROUP BY COALESCE(m.match_id, mp.match_id), m.player_count
 ORDER BY 1;
 
 -- Part C: Find Matches with No Match Participants Using Two Approaches
+-- Question: Are there matches that have never had a session?
 
 -- 1. Using NOT EXISTS
 

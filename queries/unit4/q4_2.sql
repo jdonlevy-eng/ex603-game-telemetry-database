@@ -1,7 +1,8 @@
 -- Task 4.2 Build the breakdown leadership asked for
 
--- Part A Compute total number of participants, total failures, and failure
--- counts by type for each match
+-- Part A
+-- Question: For each match, how many sessions were there and how many ended
+-- in a failure (in total and by type), in one pass?
 -- Excluding player quit disconnect_reason as it does not represent a failure
 -- Including unique counts to eliminate scenario where a single player has
 -- serveral failures in 1 match
@@ -24,8 +25,9 @@ ORDER BY
 	UNQIUE_CLIENT_CRASH_COUNT DESC,
 	UNIQUE_PARTICIPANT_COUNT DESC;
 
--- Part B Subtotals and a grand total of 
--- failures by server region (no detail rows)
+-- Part B
+-- Question: What are the failure subtotals for each server region and the
+-- platform grand total, without the detail rows?
 SELECT
 	CASE WHEN GROUPING(server_region) = 1 THEN 'All server regions'
 		ELSE m.server_region END,
@@ -42,7 +44,9 @@ ORDER BY
 	SERVER_RESTART_CRASH_COUNT DESC,
 	CLIENT_CRASH_COUNT DESC;
 
--- Part C Baseline for High Volume (15 or more participants) producers
+-- Part C
+-- Question: What is the baseline failure rate for high-volume matches
+-- (15 or more sessions)?
 
 WITH match_data AS(
 	SELECT

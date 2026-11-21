@@ -1,3 +1,7 @@
+-- Task 3.1
+-- Question: What does the match data actually contain: which participation
+-- statuses and disconnect reasons appear, and is anything unexpected?
+
 -- 3.1a Active (Ranked) highly rated (recent high volume) games. 
 -- These matches provide a basis to continue investigation
 SELECT
@@ -11,7 +15,7 @@ SELECT
 FROM matches
 WHERE is_ranked = TRUE AND player_count >= 8
 ORDER BY scheduled_on desc
-LIMIT 10
+LIMIT 10;
 
 --3.1b  All distinct participation_status across all matches with their count
 -- This query identifies 3 status (contested,finished,abandoned)
@@ -20,7 +24,7 @@ SELECT
 	participation_status as event_status,
 	count(*) as num_of_matches
 FROM match_participants
-GROUP BY participation_status
+GROUP BY participation_status;
 
 -- 3.1c All players who spent less than 5 minutes in a match
 -- Looking to see if there is a connection between
@@ -39,7 +43,7 @@ SELECT
 	participation_status,
 	disconnect_reason
 FROM match_participants
-WHERE duration_min < 5
+WHERE duration_min < 5;
 
 -- Find all players who contested or abandoned a match
 -- Checking for correlation between status and
@@ -58,7 +62,7 @@ SELECT
 	participation_status,
 	disconnect_reason
 FROM match_participants
-WHERE participation_status in ('contested','abandoned')
+WHERE participation_status in ('contested','abandoned');
 
 -- 3.1d Find matches with match_code starting with 'UQ-'
 SELECT 
@@ -70,7 +74,7 @@ SELECT
 	player_count,
 	is_ranked
 FROM matches
-WHERE match_code LIKE 'UQ-%'
+WHERE match_code LIKE 'UQ-%';
 
 -- Since no values in matches are null, I found disconnect reasons in
 -- Match_Participants where value was missing to replace the null values
@@ -88,7 +92,7 @@ SELECT
 	xp_multiplier,
 	participation_status,
 	COALESCE(disconnect_reason,'No Reason')
-FROM match_participants
+FROM match_participants;
 
 -- 3.1e Created Score Per Minute column to identify
 -- player skill based on how quickly they gain score.
@@ -104,14 +108,4 @@ SELECT
 		WHEN score/duration_min > 1 THEN 'Medium'
 		ELSE 'Bad' 
 	END AS "Player Skill"
-FROM match_participants
-
-
-
-
-
-
-
-
-
-
+FROM match_participants;

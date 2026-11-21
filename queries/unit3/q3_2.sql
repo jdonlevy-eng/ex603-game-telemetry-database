@@ -1,11 +1,13 @@
 -- Part A: The rows that vanished
+-- Question: Which sessions did the dashboard's failure query silently drop
+-- because disconnect_reason is NULL, and how is it fixed?
 
 -- This query silently ignores the rows where disconnect_reason = NULL
 -- (due to SQL 3 valued logic)
 SELECT
   COUNT(*) AS "Number of match_paritipants that did not timeout"
 FROM match_participants
-WHERE disconnect_reason <> 'Network timeout'
+WHERE disconnect_reason <> 'Network timeout';
 
 -- This query shows the counts of disconnect reasons
 -- Here you can see that the previous query counted only
@@ -17,7 +19,7 @@ SELECT
 	disconnect_reason,
 	COUNT(*) AS "NUMBER OF PLAYERS"
 FROM match_participants
-GROUP BY disconnect_reason
+GROUP BY disconnect_reason;
 
 -- Using COALESCE we replace null in the comparison
 -- with 'No Reason' allowing for the nulls to be 
@@ -25,24 +27,26 @@ GROUP BY disconnect_reason
 SELECT
   COUNT(*) AS "Number of match_paritipants that did not timeout"
 FROM match_participants
-WHERE COALESCE(disconnect_reason,'No Reason') <> 'Network timeout'
+WHERE COALESCE(disconnect_reason,'No Reason') <> 'Network timeout';
 
 
 
 -- Part B: The Alias that did not exist
+-- Question: Why does the dashboard query error when it filters on a column
+-- alias, and how is it fixed?
 
 --The following query triggers an error for its usage of an
 -- alias in the WHERE clause
 SELECT
 	duration_min as PlayTime
 FROM match_participants
-WHERE PlayTime > 5
+WHERE PlayTime > 5;
 
 -- First rewrite repeating statement in WHERE
 SELECT
 	duration_min as PlayTime
 FROM match_participants
-WHERE duration_min > 5
+WHERE duration_min > 5;
 
 -- Second rewrite using CTE
 WITH match_participants_play_time AS(
@@ -53,4 +57,4 @@ WITH match_participants_play_time AS(
 SELECT
 	PlayTime
 FROM match_participants_play_time
-WHERE PlayTime > 5
+WHERE PlayTime > 5;
