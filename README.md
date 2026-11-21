@@ -170,7 +170,7 @@ The data records whether a *player's session* failed, not whether a *match* fail
 Additionally there are only 200 sessions, a relatively small data set. A single extra failure a quarter could sway the rate significantly. If the issues are resolved, game growth will happen naturally and with more volume comes more reliable metrics.
 
 ## Video Presentation
-
+[https://github.com/user-attachments/assets/1f747046-ca7c-44f4-bfe7-e22cb49ee357]
 <!-- TODO: add video link -->
 *Video coming soon.*
 
